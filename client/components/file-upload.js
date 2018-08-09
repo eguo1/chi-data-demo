@@ -6,6 +6,9 @@ import axios from 'axios'
 class FileUpload extends Component {
   handleSubmit = (evt) => {
     evt.preventDefault()
+    if(!this.uploadInput.files[0]) {
+      return console.log('No file uploaded!')
+    }
     let fileData = new FormData()
     fileData.append('file', this.uploadInput.files[0])
     fileData.append('filename', this.uploadInput.files[0].name)
