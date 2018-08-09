@@ -10,6 +10,8 @@ const sessionStore = new SequelizeStore({db})
 const PORT = process.env.PORT || 8080
 const app = express()
 const socketio = require('socket.io')
+const Busboy = require('busboy')
+const csv = require('fast-csv')
 module.exports = app
 
 // This is a global Mocha hook, used for resource cleanup.
@@ -62,6 +64,25 @@ const createApp = () => {
   )
   app.use(passport.initialize())
   app.use(passport.session())
+
+  // file upload route
+  app.post('/upload', (req, res, next) => {
+    const busboy = new Busboy({ headers: req.headers })
+    busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
+      console.log('File [' + fieldname + ']: filename: ' + filename)
+      file.pipe(csv({ headers: true }))
+        .on('data', data => {
+          console.log(data);
+        })
+        .on('error', err => {
+          console.error(err)
+        })
+        .on('end', () => {
+          console.log('All done!')
+        })
+    })
+    req.pipe(busboy)
+  })
 
   // auth and api routes
   app.use('/auth', require('./auth'))
