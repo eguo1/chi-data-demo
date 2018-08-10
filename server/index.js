@@ -12,6 +12,7 @@ const app = express()
 const socketio = require('socket.io')
 const Busboy = require('busboy')
 const csv = require('fast-csv')
+const { ImportData } = require('./db/models')
 module.exports = app
 
 // This is a global Mocha hook, used for resource cleanup.
@@ -69,10 +70,13 @@ const createApp = () => {
   app.post('/upload', (req, res, next) => {
     const busboy = new Busboy({ headers: req.headers })
     busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
-      console.log('File [' + fieldname + ']: filename: ' + filename)
       file.pipe(csv({ headers: true }))
         .on('data', data => {
-          console.log(data);
+          if (data.Location.length) {
+            const convertedLocation = data.Location.replace('(', '').replace(')', '').split(',')
+            data.Location = { type: 'Point', coordinates: convertedLocation }
+            return ImportData.create(data)
+          }
         })
         .on('error', err => {
           console.error(err)
@@ -126,7 +130,7 @@ const startListening = () => {
   require('./socket')(io)
 }
 
-const syncDb = () => db.sync()
+const syncDb = () => db.sync({ force: true })
 
 async function bootApp() {
   await sessionStore.sync()
