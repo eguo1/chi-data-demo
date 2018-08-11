@@ -6,11 +6,9 @@ const db = require('../db')
 const ImportData = db.define('import_data', {
   'Case Number': {
     type: Sequelize.STRING,
-    unique: true
   },
   ID: {
     type: Sequelize.INTEGER,
-    unique: true
   },
   Date: {
     type: Sequelize.DATE,
@@ -37,10 +35,10 @@ const ImportData = db.define('import_data', {
     type: Sequelize.BOOLEAN,
   },
   Beat: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.STRING,
   },
   Ward: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.STRING,
   },
   'FBI Code': {
     type: Sequelize.STRING,

@@ -70,20 +70,32 @@ const createApp = () => {
   app.post('/upload', (req, res, next) => {
     const busboy = new Busboy({ headers: req.headers })
     busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
-      file.pipe(csv({ headers: true }))
-        .on('data', data => {
-          if (data.Location.length) {
-            const convertedLocation = data.Location.replace('(', '').replace(')', '').split(',')
-            data.Location = { type: 'Point', coordinates: convertedLocation }
-            return ImportData.create(data)
-          }
-        })
-        .on('error', err => {
-          console.error(err)
-        })
-        .on('end', () => {
-          console.log('All done!')
-        })
+      let tempArr = []
+      let batchSize = 500
+      file
+        .pipe(csv({ headers: true }))
+          .on('data', async data => {
+            if (data.Location.length) {
+              const convertedLocation = data.Location.replace('(', '').replace(')', '').split(',')
+              data.Location = { type: 'Point', coordinates: convertedLocation }
+              tempArr.push(data)
+              if(tempArr.length >= batchSize) {
+                // console.log(tempArr[0])
+                let createArr = tempArr
+                tempArr = []
+                await ImportData.bulkCreate(createArr)
+              }
+            }
+          })
+          .on('error', err => {
+            console.error(err)
+          })
+          .on('end', async () => {
+            // console.log(tempArr[0])
+            await ImportData.bulkCreate(tempArr)
+            tempArr = []
+            console.log('All done!')
+          })
     })
     req.pipe(busboy)
   })
