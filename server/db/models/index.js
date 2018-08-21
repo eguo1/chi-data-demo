@@ -1,5 +1,5 @@
 const User = require('./user')
-const ImportData = require('./import_data')
+const { ImportData } = require('./import_data')
 
 /**
  * If we had any associations to make, this would be a great place to put them!

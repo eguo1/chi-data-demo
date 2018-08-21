@@ -90,21 +90,19 @@ const createApp = async () => {
   // file upload route
   app.post('/upload', (req, res, next) => {
     const busboy = new Busboy({ headers: req.headers })
-    busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
+    busboy.on('file', (fieldname, file) => {
       file
         .pipe(csv({ headers: true }))
           .on('data', async data => {
             if (data.Location.length) {
-              const convertedLocation = data.Location.replace('(', '').replace(')', '').split(',')
-              data.Location = { type: 'Point', coordinates: convertedLocation }
               await queue.enqueue('csv-parser', 'streamRow', data)
             }
           })
           .on('error', err => {
-            console.error(err)
+            next(err)
           })
           .on('end', () => {
-            console.log('Done streaming, jobs queued up in Resque!')
+            res.json('Done streaming, jobs queued up!')
           })
     })
     req.pipe(busboy)

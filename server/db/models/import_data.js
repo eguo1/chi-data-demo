@@ -59,8 +59,16 @@ const ImportData = db.define('import_data', {
     type: Sequelize.FLOAT,
   },
   Location: {
-    type: Sequelize.GEOMETRY('POINT')
+    type: Sequelize.GEOMETRY('POINT'),
+  }
+}, {
+  hooks: {
+    beforeValidate: importData => {
+      const convertedLocation =
+        importData.Location.replace('(', '').replace(')', '').split(',')
+      importData.Location = { type: 'Point', coordinates: convertedLocation }
+    }
   }
 })
 
-module.exports = ImportData
+module.exports.ImportData = ImportData

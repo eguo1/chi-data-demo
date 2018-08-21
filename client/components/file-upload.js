@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import axios from 'axios'
 
 class FileUpload extends Component {
-  handleSubmit = (evt) => {
+  handleSubmit = async (evt) => {
     evt.preventDefault()
     if(!this.uploadInput.files[0]) {
       return console.log('No file uploaded!')
@@ -12,13 +12,14 @@ class FileUpload extends Component {
     let fileData = new FormData()
     fileData.append('file', this.uploadInput.files[0])
     fileData.append('filename', this.uploadInput.files[0].name)
-    return axios.post('/upload', fileData,
+    await axios.post('/upload', fileData,
       {
         headers: {
             'Content-Type': 'multipart/form-data'
         }
       }
     ).catch(err => console.log(err))
+    this.uploadInput.value = null
   }
   render() {
     return (
