@@ -65,7 +65,7 @@ const ImportData = db.define('import_data', {
   hooks: {
     beforeValidate: importData => {
       const convertedLocation =
-        importData.Location.replace('(', '').replace(')', '').split(',')
+        importData.Location.replace('(', '').replace(')', '').split(',').reverse()
       importData.Location = { type: 'Point', coordinates: convertedLocation }
     }
   }
