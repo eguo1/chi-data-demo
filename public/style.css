@@ -19,3 +19,8 @@ form div {
   margin: 1em;
   display: inline-block;
 }
+
+.leaflet-container {
+  height: 700px;
+  width: 70%;
+}
