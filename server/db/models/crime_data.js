@@ -3,7 +3,7 @@
 const Sequelize = require('sequelize')
 const db = require('../db')
 
-const ImportData = db.define('crime_data', {
+const CrimeData = db.define('crime_data', {
   'Case Number': {
     type: Sequelize.STRING,
   },
@@ -71,4 +71,4 @@ const ImportData = db.define('crime_data', {
   }
 })
 
-module.exports.ImportData = ImportData
+module.exports.CrimeData = CrimeData
