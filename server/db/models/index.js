@@ -1,7 +1,7 @@
 const User = require('./user')
-const { ImportData } = require('./import_data')
+const { CrimeData } = require('./crime_data')
 
 module.exports = {
   User,
-  ImportData
+  CrimeData
 }

@@ -3,7 +3,7 @@
 const Sequelize = require('sequelize')
 const db = require('../db')
 
-const ImportData = db.define('import_data', {
+const ImportData = db.define('crime_data', {
   'Case Number': {
     type: Sequelize.STRING,
   },
@@ -63,10 +63,10 @@ const ImportData = db.define('import_data', {
   }
 }, {
   hooks: {
-    beforeValidate: importData => {
+    beforeValidate: crimeData => {
       const convertedLocation =
-        importData.Location.replace('(', '').replace(')', '').split(',').reverse()
-      importData.Location = { type: 'Point', coordinates: convertedLocation }
+        crimeData.Location.replace('(', '').replace(')', '').split(',').reverse()
+      crimeData.Location = { type: 'Point', coordinates: convertedLocation }
     }
   }
 })
