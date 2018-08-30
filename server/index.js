@@ -10,6 +10,13 @@ const sessionStore = new SequelizeStore({db})
 const PORT = process.env.PORT || 8080
 const app = express()
 const socketio = require('socket.io')
+const Busboy = require('busboy')
+const csv = require('fast-csv')
+const NodeResque = require('node-resque')
+// const schedule = require('node-schedule')
+const { redisWorkers } = require('./redis/workers')
+const { connectionDetails, bootRedis } = require('./redis')
+// const { ImportData } = require('./db/models')
 module.exports = app
 
 // This is a global Mocha hook, used for resource cleanup.
@@ -40,7 +47,24 @@ passport.deserializeUser(async (id, done) => {
   }
 })
 
-const createApp = () => {
+const createApp = async () => {
+  // initialize redis
+  bootRedis()
+  const queue = new NodeResque.Queue({ connection: connectionDetails }, redisWorkers)
+  queue.on('error', error => console.error(error))
+  await queue.connect()
+
+  const multiWorker = new NodeResque.MultiWorker({
+    connection: connectionDetails,
+    queues: ['csv-parser'],
+    minTaskProcessors: 1,
+    maxTaskProcessors: 100,
+    checkTimeout: 1000,
+    maxEventLoopDelay: 10
+  }, redisWorkers)
+  multiWorker.start()
+  multiWorker.on('error', error => console.error(error))
+
   // logging middleware
   app.use(morgan('dev'))
 
@@ -62,6 +86,27 @@ const createApp = () => {
   )
   app.use(passport.initialize())
   app.use(passport.session())
+
+  // file upload route
+  app.post('/upload', (req, res, next) => {
+    const busboy = new Busboy({ headers: req.headers })
+    busboy.on('file', (fieldname, file) => {
+      file
+        .pipe(csv({ headers: true }))
+          .on('data', async data => {
+            if (data.Location.length) {
+              await queue.enqueue('csv-parser', 'streamRow', data)
+            }
+          })
+          .on('error', err => {
+            next(err)
+          })
+          .on('end', () => {
+            res.json('Done streaming, jobs queued up!')
+          })
+    })
+    req.pipe(busboy)
+  })
 
   // auth and api routes
   app.use('/auth', require('./auth'))
