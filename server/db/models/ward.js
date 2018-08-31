@@ -42,4 +42,13 @@ Ward.prototype.aggregateCount = async function () {
   return allPoints.length
 }
 
+// Ward.getAllWards = async function () {
+//   const allWards = await Ward.findAll()
+//   for(let i = 0; i < allWards.length; i++) {
+//     const count = await allWards[i].aggregateCount()
+//     allWards[i].count = count
+//   }
+//   return allWards
+// }
+
 module.exports.Ward = Ward
