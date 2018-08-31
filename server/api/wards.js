@@ -7,6 +7,15 @@ module.exports = router
 
 router.get('/', async (req, res, next) => {
   try {
+    const allWards = await Ward.findAll()
+    res.json(allWards)
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.get('/fetch', async (req, res, next) => {
+  try {
     const wardData = await fetchAllWards()
     res.json(wardData)
   } catch (err) {
