@@ -1,14 +1,22 @@
+'use strict'
+
 import React, { Component } from 'react'
 import { Map, TileLayer, Marker, Popup } from 'react-leaflet'
+import { connect } from 'react-redux'
+import { getWardData } from '../store'
 
-export default class GeoMap extends Component {
+class GeoMap extends Component {
   constructor() {
     super()
     this.state = {
-      lat: 42.022547568,
-      lng: -87.676139494,
-      zoom: 13,
+      lat: 41.8781,
+      lng: -87.6298,
+      zoom: 12,
     }
+  }
+
+  componentDidMount () {
+    return this.props.getWards()
   }
 
   render() {
@@ -28,3 +36,13 @@ export default class GeoMap extends Component {
     )
   }
 }
+
+const mapStateToProps = state => ({
+  wards: state.wards
+})
+
+const mapDispatchToProps = dispatch => ({
+  getWards: () => dispatch(getWardData())
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(GeoMap)
