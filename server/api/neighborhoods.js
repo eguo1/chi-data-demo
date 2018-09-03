@@ -13,3 +13,12 @@ router.get('/fetch', async (req, res, next) => {
     next(err)
   }
 })
+
+router.get('/update', async (req, res, next) => {
+  try {
+    const updatedData = await Neighborhood.aggregateCount()
+    res.json(updatedData)
+  } catch (err) {
+    next(err)
+  }
+})

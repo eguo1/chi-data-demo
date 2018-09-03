@@ -21,4 +21,30 @@ const Neighborhood = db.define('neighborhood', {
   }
 })
 
+Neighborhood.aggregateCount = async function () {
+  const [allNeighborhoodCounts, resultData] = await db.query(`
+    SELECT
+    count(crime_data."ID"),
+    neighborhoods.name
+    FROM neighborhoods, crime_data
+    WHERE ST_Contains(neighborhoods.geom, crime_data."Location")
+    GROUP BY neighborhoods.name;`
+  )
+  let updatedNeighborhoods = []
+  if (allNeighborhoodCounts.length) {
+    for (let i = 0; i < allNeighborhoodCounts.length; i++) {
+      let [updatedRows, updatedNeighborhood] = await Neighborhood.update({
+        count: allNeighborhoodCounts[i].count
+      }, {
+        where: {
+          name: allNeighborhoodCounts[i].name
+        },
+        returning: true
+      })
+      updatedNeighborhoods.push(updatedNeighborhood)
+    }
+  }
+  return updatedNeighborhoods
+}
+
 module.exports.Neighborhood = Neighborhood
