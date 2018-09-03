@@ -18,21 +18,18 @@ const Ward = db.define('ward', {
   }
 })
 
-const singleWardQuery =
-  `SELECT
-  crime_data."ID",
-  crime_data."Date",
-  crime_data."Block",
-  crime_data."Primary Type",
-  crime_data."Arrest",
-  crime_data."Location"
-  FROM wards, crime_data
-  WHERE ST_Contains(wards.geom, crime_data."Location")
-  AND wards.name = :wardName;`
-
 Ward.prototype.aggregateList = function () {
-  return db.query(
-    singleWardQuery,
+  return db.query(`
+    SELECT
+    crime_data."ID",
+    crime_data."Date",
+    crime_data."Block",
+    crime_data."Primary Type",
+    crime_data."Arrest",
+    crime_data."Location"
+    FROM wards, crime_data
+    WHERE ST_Contains(wards.geom, crime_data."Location")
+    AND wards.name = :wardName;`,
     { replacements: { wardName: this.name }, type: Sequelize.QueryTypes.SELECT }
   )
 }
