@@ -5,6 +5,15 @@ const fetchAllWards = require('../services/ward-data')
 const { Ward } = require('../db/models')
 module.exports = router
 
+router.get('/', async (req, res, next) => {
+  try {
+    const allWards = await Ward.findAll()
+    res.json(allWards)
+  } catch (err) {
+    next(err)
+  }
+})
+
 router.get('/update-counts', async (req, res, next) => {
   try {
     const updatedCounts = await Ward.aggregateCount()
