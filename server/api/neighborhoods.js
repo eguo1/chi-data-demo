@@ -7,7 +7,8 @@ module.exports = router
 
 router.get('/fetch', async (req, res, next) => {
   try {
-    const neighborhoodData = await fetchAllNeighborhoods()
+    await fetchAllNeighborhoods()
+    const neighborhoodData = await Neighborhood.aggregateCount()
     res.json(neighborhoodData)
   } catch (err) {
     next(err)
