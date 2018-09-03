@@ -8,10 +8,10 @@ const Neighborhood = db.define('neighborhood', {
     type: Sequelize.STRING
   },
   area: {
-    type: Sequelize.DECIMAL(10,4)
+    type: Sequelize.DECIMAL(13,4)
   },
   border: {
-    type: Sequelize.DECIMAL(10,6)
+    type: Sequelize.DECIMAL(12,6)
   },
   geom: {
     type: Sequelize.GEOMETRY('MULTIPOLYGON')
