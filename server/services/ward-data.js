@@ -19,7 +19,7 @@ const individualFetch = async (wardNum) => {
 
 const fetchAllWards = async () => {
   const wardArr = []
-  for (let i = 1; i < 51; i++) {
+  for (let i = 0; i < 50; i++) {
     const individualWard = await individualFetch(i)
     const { name, centroid, geom } = individualWard
     wardArr.push({
