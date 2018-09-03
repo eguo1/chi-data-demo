@@ -5,10 +5,10 @@ const fetchAllWards = require('../services/ward-data')
 const { Ward } = require('../db/models')
 module.exports = router
 
-router.get('/', async (req, res, next) => {
+router.get('/update-counts', async (req, res, next) => {
   try {
-    const allWards = await Ward.findAll()
-    res.json(allWards)
+    const updatedCounts = await Ward.aggregateCount()
+    res.json(updatedCounts)
   } catch (err) {
     next(err)
   }
@@ -16,8 +16,9 @@ router.get('/', async (req, res, next) => {
 
 router.get('/fetch', async (req, res, next) => {
   try {
-    const wardData = await fetchAllWards()
-    res.json(wardData)
+    await fetchAllWards()
+    const updatedWardData = await Ward.aggregateCount()
+    res.json(updatedWardData)
   } catch (err) {
     next(err)
   }
@@ -30,7 +31,7 @@ router.get('/:id', async (req, res, next) => {
         id: req.params.id
       }
     })
-    const allPoints = await foundWard.aggregateCount()
+    const allPoints = await foundWard.aggregateList()
     res.json(allPoints)
   } catch (err) {
     next(err)

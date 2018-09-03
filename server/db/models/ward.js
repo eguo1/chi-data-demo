@@ -5,17 +5,20 @@ const db = require('../db')
 
 const Ward = db.define('ward', {
   name: {
-    type: Sequelize.STRING,
+    type: Sequelize.STRING
   },
   centroid: {
     type: Sequelize.GEOMETRY('POINT')
   },
   geom: {
     type: Sequelize.GEOMETRY('MULTIPOLYGON')
+  },
+  count: {
+    type: Sequelize.INTEGER
   }
 })
 
-const aggregateQuery =
+const singleWardQuery =
   `SELECT
   crime_data."ID",
   crime_data."Date",
@@ -29,17 +32,34 @@ const aggregateQuery =
 
 Ward.prototype.aggregateList = function () {
   return db.query(
-    aggregateQuery,
+    singleWardQuery,
     { replacements: { wardName: this.name }, type: Sequelize.QueryTypes.SELECT }
   )
 }
 
-Ward.prototype.aggregateCount = async function () {
-  const allPoints = await db.query(
-    aggregateQuery,
-    { replacements: { wardName: this.name }, type: Sequelize.QueryTypes.SELECT }
+Ward.aggregateCount = async function () {
+  const [allWardCounts, resultData] = await db.query(`
+    SELECT
+    count(crime_data."ID"),
+    wards.name
+    FROM wards, crime_data
+    WHERE ST_Contains(wards.geom, crime_data."Location")
+    GROUP BY wards.name;`,
+    // { replacements: { wardName: this.name }, type: Sequelize.QueryTypes.SELECT }
   )
-  return allPoints.length
+  let updatedWards = []
+  for (let i = 0; i < 50; i++) {
+    let [updatedRows, updatedWard] = await Ward.update({
+      count: allWardCounts[i].count
+    }, {
+      where: {
+        name: allWardCounts[i].name
+      },
+      returning: true
+    })
+    updatedWards.push(updatedWard)
+  }
+  return updatedWards
 }
 
 // Ward.getAllWards = async function () {

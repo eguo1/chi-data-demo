@@ -7,7 +7,7 @@ const individualFetch = async (wardNum) => {
   const { data } = await axios.get(`http://boundaries.tribapps.com/1.0/boundary-set/wards/${wardNum}`)
   const [ward, _createdBool] = await Ward.findOrCreate({
     where: {
-      name: data.name,
+      name: data.name.slice(0,-2),
     },
     defaults: {
       centroid: data.centroid,
