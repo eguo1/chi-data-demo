@@ -12,6 +12,7 @@ class FileUpload extends Component {
     let fileData = new FormData()
     fileData.append('file', this.uploadInput.files[0])
     fileData.append('filename', this.uploadInput.files[0].name)
+    this.uploadInput.value = null
     await axios.post('/upload', fileData,
       {
         headers: {
@@ -19,7 +20,6 @@ class FileUpload extends Component {
         }
       }
     ).catch(err => console.log(err))
-    this.uploadInput.value = null
   }
   render() {
     return (
