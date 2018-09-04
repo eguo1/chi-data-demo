@@ -8,14 +8,9 @@ module.exports = router
 
 router.get('/', async (req, res, next) => {
   try {
-    const [ allWards, resultData ] = await db.query(`
-      SELECT
-      wards.name,
-      wards.count,
-      ST_GeomFromText(ST_AsText(ST_FlipCoordinates(wards.geom))) as geom,
-      ST_GeomFromText(ST_AsText(ST_FlipCoordinates(wards.centroid))) as centroid
-      FROM wards;
-    `)
+    const allWards = await Ward.findAll({
+      attributes: [ 'name', 'count', 'geom', 'centroid' ]
+    })
     res.json(allWards)
   } catch (err) {
     next(err)
