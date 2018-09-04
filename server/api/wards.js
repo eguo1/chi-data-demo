@@ -2,12 +2,20 @@
 
 const router = require('express').Router()
 const fetchAllWards = require('../services/ward-data')
+const db = require('../db')
 const { Ward } = require('../db/models')
 module.exports = router
 
 router.get('/', async (req, res, next) => {
   try {
-    const allWards = await Ward.findAll()
+    const [ allWards, resultData ] = await db.query(`
+      SELECT
+      wards.name,
+      wards.count,
+      ST_GeomFromText(ST_AsText(ST_FlipCoordinates(wards.geom))) as geom,
+      ST_GeomFromText(ST_AsText(ST_FlipCoordinates(wards.centroid))) as centroid
+      FROM wards;
+    `)
     res.json(allWards)
   } catch (err) {
     next(err)
