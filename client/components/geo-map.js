@@ -37,9 +37,10 @@ class GeoMap extends Component {
           return (
             <Polygon
               color='white'
-              weight='1'
+              dashArray='3'
+              weight='2'
               opacity='1'
-              fillOpacity='0.6'
+              fillOpacity='0.65'
               fillColor={getColor(ward.count)}
               positions={ward.geom.coordinates}
               key={ward.name}
