@@ -2,7 +2,6 @@
 
 import React, { Component } from 'react'
 import { Map, TileLayer, Marker, Popup, Polygon, GeoJSON } from 'react-leaflet'
-import L from 'leaflet'
 import { connect } from 'react-redux'
 import { getWardData } from '../store'
 import { getColor } from '../util/getColor'

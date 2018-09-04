@@ -2,7 +2,6 @@
 
 const router = require('express').Router()
 const fetchAllWards = require('../services/ward-data')
-const db = require('../db')
 const { Ward } = require('../db/models')
 module.exports = router
 
