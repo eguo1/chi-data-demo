@@ -2,15 +2,9 @@
 
 import React, { Component } from 'react'
 import { Map, TileLayer, Marker, Popup, Polygon, GeoJSON } from 'react-leaflet'
-import { connect } from 'react-redux'
-import {
-  getWardData,
-  getNeighborhoodData,
-  switchDatasets
-} from '../store'
 import { getColor } from '../util/getColor'
 
-class GeoMap extends Component {
+export default class GeoMap extends Component {
   constructor() {
     super()
     this.state = {
@@ -20,62 +14,33 @@ class GeoMap extends Component {
     }
   }
 
-  componentDidMount () {
-    return this.props.getWards()
-  }
-
-  handleSwitch = () => {
-    this.props.switchDisplay()
-  }
-
   render() {
     const position = [this.state.lat, this.state.lng]
     return (
-      <div>
-        <button
-          onClick={this.handleSwitch}
-        >
-          Switch
-        </button>
-        <Map center={position} zoom={this.state.zoom}>
-          <TileLayer
-            attribution="&amp;copy <a href=&quot;https://www.itsericguo.com&quot;>Eric Guo</a>"
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          {/* <Marker position={position}>
-            <Popup>
-              A pretty CSS3 popup. <br /> Easily customizable.
-            </Popup>
-          </Marker> */}
-          {this.props.wards.map(ward => {
-            return (
-              <GeoJSON
-                color='white'
-                dashArray='3'
-                weight='2'
-                opacity='1'
-                fillOpacity='0.65'
-                fillColor={getColor(ward.count)}
-                data={ward.geom}
-                key={ward.name}
-              />)
-            })}
-        </Map>
-      </div>
+      <Map center={position} zoom={this.state.zoom}>
+        <TileLayer
+          attribution="&amp;copy <a href=&quot;https://www.itsericguo.com&quot;>Eric Guo</a>"
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        {/* <Marker position={position}>
+          <Popup>
+            A pretty CSS3 popup. <br /> Easily customizable.
+          </Popup>
+        </Marker> */}
+        {this.props.mapElements.map(elem => {
+          return (
+            <GeoJSON
+              color='white'
+              dashArray='3'
+              weight='2'
+              opacity='1'
+              fillOpacity='0.65'
+              fillColor={getColor(elem.count)}
+              data={elem.geom}
+              key={elem.name}
+            />)
+          })}
+      </Map>
     )
   }
 }
-
-const mapStateToProps = state => ({
-  map: state.map,
-  wards: state.wards,
-  neighborhoods: state.neighborhoods
-})
-
-const mapDispatchToProps = dispatch => ({
-  getWards: () => dispatch(getWardData()),
-  getNeighborhoods: () => dispatch(getNeighborhoodData()),
-  switchDisplay: () => dispatch(switchDatasets())
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(GeoMap)
