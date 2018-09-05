@@ -10,7 +10,8 @@ router.get('/', async (req, res, next) => {
     const allNeighborhoods = await Neighborhood.findAll({
       attributes: [
         'name', 'count', 'area', 'border', 'geom'
-      ]
+      ],
+      order: [ [ 'count', 'DESC' ] ]
     })
     res.json(allNeighborhoods)
   } catch (err) {

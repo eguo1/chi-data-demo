@@ -11,7 +11,7 @@ import GeoMap from './geo-map'
 
 class MapContainer extends Component {
   componentDidMount() {
-    return this.props.getWards()
+    return this.props.getWards() && this.props.getNeighborhoods()
   }
 
   handleSwitch = () => {
