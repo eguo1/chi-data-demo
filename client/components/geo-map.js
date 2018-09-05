@@ -2,12 +2,9 @@
 
 import React, { Component } from 'react'
 import { Map, TileLayer, Marker, Popup, Polygon, GeoJSON } from 'react-leaflet'
-import L from 'leaflet'
-import { connect } from 'react-redux'
-import { getWardData } from '../store'
 import { getColor } from '../util/getColor'
 
-class GeoMap extends Component {
+export default class GeoMap extends Component {
   constructor() {
     super()
     this.state = {
@@ -17,16 +14,19 @@ class GeoMap extends Component {
     }
   }
 
-  componentDidMount () {
-    return this.props.getWards()
-  }
-
   render() {
     const position = [this.state.lat, this.state.lng]
+    const { mapElements } = this.props
+    let max, min
+    if (mapElements[0]) {
+      max = mapElements[0].count
+      min = mapElements[mapElements.length - 1].count
+    }
+
     return (
       <Map center={position} zoom={this.state.zoom}>
         <TileLayer
-          attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+          attribution="&amp;copy <a href=&quot;https://www.itsericguo.com&quot;>Eric Guo</a>"
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {/* <Marker position={position}>
@@ -34,7 +34,7 @@ class GeoMap extends Component {
             A pretty CSS3 popup. <br /> Easily customizable.
           </Popup>
         </Marker> */}
-        {this.props.wards.map(ward => {
+        {mapElements.map(elem => {
           return (
             <GeoJSON
               color='white'
@@ -42,22 +42,12 @@ class GeoMap extends Component {
               weight='2'
               opacity='1'
               fillOpacity='0.65'
-              fillColor={getColor(ward.count)}
-              data={ward.geom}
-              key={ward.name}
+              fillColor={getColor(max, min, elem.count)}
+              data={elem.geom}
+              key={elem.name}
             />)
           })}
       </Map>
     )
   }
 }
-
-const mapStateToProps = state => ({
-  wards: state.wards
-})
-
-const mapDispatchToProps = dispatch => ({
-  getWards: () => dispatch(getWardData())
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(GeoMap)

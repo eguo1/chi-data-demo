@@ -2,14 +2,14 @@
 
 const router = require('express').Router()
 const fetchAllWards = require('../services/ward-data')
-const db = require('../db')
 const { Ward } = require('../db/models')
 module.exports = router
 
 router.get('/', async (req, res, next) => {
   try {
     const allWards = await Ward.findAll({
-      attributes: [ 'name', 'count', 'geom', 'centroid' ]
+      attributes: [ 'name', 'count', 'geom', 'centroid' ],
+      order: [ [ 'count', 'DESC' ] ]
     })
     res.json(allWards)
   } catch (err) {
