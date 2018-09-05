@@ -19,6 +19,7 @@ class MapContainer extends Component {
   }
 
   render() {
+    const { map, wards, neighborhoods } = this.props
     return (
       <div>
         <button
@@ -26,7 +27,7 @@ class MapContainer extends Component {
         >
           Switch
         </button>
-        <GeoMap mapElements={this.props.wards}/>
+        <GeoMap mapElements={map === 'wards' ? wards : neighborhoods}/>
       </div>
     )
   }
