@@ -45,8 +45,13 @@ export default class GeoMap extends Component {
               fillColor={getColor(max, min, adj, elem.count)}
               data={elem.geom}
               key={elem.name}
-            />)
-          })}
+            >
+              <Popup>
+                {elem.name} - {elem.count}
+              </Popup>
+            </GeoJSON>
+          )})
+        }
       </Map>
     )
   }
