@@ -16,7 +16,7 @@ export default class GeoMap extends Component {
 
   render() {
     const position = [this.state.lat, this.state.lng]
-    const { mapElements } = this.props
+    const { mapElements, adj } = this.props
     let max, min
     if (mapElements[0]) {
       max = mapElements[0].count
@@ -42,7 +42,7 @@ export default class GeoMap extends Component {
               weight='2'
               opacity='1'
               fillOpacity='0.65'
-              fillColor={getColor(max, min, elem.count)}
+              fillColor={getColor(max, min, adj, elem.count)}
               data={elem.geom}
               key={elem.name}
             />)
