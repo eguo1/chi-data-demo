@@ -17,7 +17,7 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-router.get('/update-counts', async (req, res, next) => {
+router.get('/update', async (req, res, next) => {
   try {
     const updatedCounts = await Ward.aggregateCount()
     res.json(updatedCounts)

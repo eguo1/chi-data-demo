@@ -4,20 +4,6 @@ const ordinal = require('ordinal')
 const axios = require('axios')
 const { Ward } = require('../db/models')
 
-const individualFetch = async (wardNum) => {
-  const { data } = await axios.get(`http://boundaries.tribapps.com/1.0/boundary-set/wards/${wardNum}`)
-  const [ward, _createdBool] = await Ward.findOrCreate({
-    where: {
-      name: data,
-    },
-    defaults: {
-      centroid: data.centroid,
-      geom: data.simple_shape
-    }
-  })
-  return ward
-}
-
 const fetchAllWards = async () => {
   const { data } = await axios.get('https://data.cityofchicago.org/resource/k9yb-bpqx.json')
   const allWards = []
