@@ -13,4 +13,3 @@ export const getColor = (max, min, adj, count) => {
          count > min + rangeChunk ? '#fee8c8' :
                                     '#fff7ec'
 }
-
