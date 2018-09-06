@@ -27,7 +27,9 @@ export default class GeoMap extends Component {
       <Map center={position} zoom={this.state.zoom}>
         <TileLayer
           attribution="&amp;copy <a href=&quot;https://www.itsericguo.com&quot;>Eric Guo</a>"
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          url='https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}'
+          id='mapbox.streets'
+          accessToken={process.env.MAPBOX_TOKEN}
         />
         {/* <Marker position={position}>
           <Popup>
