@@ -1,8 +1,9 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { Map, TileLayer, Marker, Popup, Polygon, GeoJSON } from 'react-leaflet'
-import { getColor } from '../util/getColor'
+import { Map, TileLayer } from 'react-leaflet'
+import GeoRegion from './geo-region'
+import { getColor } from '../../util/getColor'
 
 export default class GeoMap extends Component {
   constructor() {
@@ -38,20 +39,13 @@ export default class GeoMap extends Component {
         </Marker> */}
         {mapElements.map(elem => {
           return (
-            <GeoJSON
-              color='white'
-              dashArray='3'
-              weight='2'
-              opacity='1'
-              fillOpacity='0.65'
+            <GeoRegion
               fillColor={getColor(max, min, adj, elem.count)}
-              data={elem.geom}
+              geom={elem.geom}
               key={elem.name}
-            >
-              <Popup>
-                {elem.name} - {elem.count}
-              </Popup>
-            </GeoJSON>
+              name={elem.name}
+              count={elem.count}
+            />
           )})
         }
       </Map>

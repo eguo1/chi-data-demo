@@ -3,7 +3,6 @@ import {connect} from 'react-redux'
 import PropTypes from 'prop-types'
 import {auth} from '../store'
 import FileUpload from './file-upload'
-import GeoMap from './geo-map'
 
 /**
  * COMPONENT
