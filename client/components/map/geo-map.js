@@ -32,17 +32,12 @@ export default class GeoMap extends Component {
           id='mapbox.streets'
           accessToken={process.env.MAPBOX_TOKEN}
         />
-        {/* <Marker position={position}>
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker> */}
         {mapElements.map(elem => {
           return (
             <GeoRegion
+              key={elem.name}
               fillColor={getColor(max, min, adj, elem.count)}
               geom={elem.geom}
-              key={elem.name}
               name={elem.name}
               count={elem.count}
             />

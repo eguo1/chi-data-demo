@@ -8,7 +8,7 @@ const defaultStyle = {
 }
 
 const focusStyle = {
-  weight: 4, color: '#95a4c1', dashArray: ''
+  weight: 4, color: '#b70000', dashArray: ''
 }
 
 export default class GeoRegion extends Component {
