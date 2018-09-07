@@ -40,6 +40,9 @@ const CrimeData = db.define('crime_data', {
   Ward: {
     type: Sequelize.STRING,
   },
+  Neighborhood: {
+    type: Sequelize.STRING,
+  },
   'FBI Code': {
     type: Sequelize.STRING,
   },

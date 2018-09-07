@@ -7,8 +7,11 @@ const Ward = db.define('ward', {
   name: {
     type: Sequelize.STRING
   },
-  centroid: {
-    type: Sequelize.GEOMETRY('POINT')
+  area: {
+    type: Sequelize.DECIMAL(13,4)
+  },
+  border: {
+    type: Sequelize.DECIMAL(13,7)
   },
   geom: {
     type: Sequelize.GEOMETRY('MULTIPOLYGON')

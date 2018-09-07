@@ -8,7 +8,7 @@ module.exports = router
 router.get('/', async (req, res, next) => {
   try {
     const allWards = await Ward.findAll({
-      attributes: [ 'name', 'count', 'geom', 'centroid' ],
+      attributes: [ 'name', 'count', 'geom', 'area', 'border' ],
       order: [ [ 'count', 'DESC' ] ]
     })
     res.json(allWards)
@@ -17,7 +17,7 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-router.get('/update-counts', async (req, res, next) => {
+router.get('/update', async (req, res, next) => {
   try {
     const updatedCounts = await Ward.aggregateCount()
     res.json(updatedCounts)

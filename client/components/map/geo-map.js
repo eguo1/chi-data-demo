@@ -1,8 +1,9 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { Map, TileLayer, Marker, Popup, Polygon, GeoJSON } from 'react-leaflet'
-import { getColor } from '../util/getColor'
+import { Map, TileLayer } from 'react-leaflet'
+import GeoRegion from './geo-region'
+import { getColor } from '../../util/getColor'
 
 export default class GeoMap extends Component {
   constructor() {
@@ -27,29 +28,19 @@ export default class GeoMap extends Component {
       <Map center={position} zoom={this.state.zoom}>
         <TileLayer
           attribution="&amp;copy <a href=&quot;https://www.itsericguo.com&quot;>Eric Guo</a>"
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          url='https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}'
+          id='mapbox.streets'
+          accessToken={process.env.MAPBOX_TOKEN}
         />
-        {/* <Marker position={position}>
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker> */}
         {mapElements.map(elem => {
           return (
-            <GeoJSON
-              color='white'
-              dashArray='3'
-              weight='2'
-              opacity='1'
-              fillOpacity='0.65'
-              fillColor={getColor(max, min, adj, elem.count)}
-              data={elem.geom}
+            <GeoRegion
               key={elem.name}
-            >
-              <Popup>
-                {elem.name} - {elem.count}
-              </Popup>
-            </GeoJSON>
+              fillColor={getColor(max, min, adj, elem.count)}
+              geom={elem.geom}
+              name={elem.name}
+              count={elem.count}
+            />
           )})
         }
       </Map>

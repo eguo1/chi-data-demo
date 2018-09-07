@@ -7,11 +7,12 @@ import {
   getNeighborhoodData,
   switchDatasets
 } from '../store'
-import GeoMap from './geo-map'
+import GeoMap from './map/geo-map'
 
 class MapContainer extends Component {
-  componentDidMount() {
-    return this.props.getWards() && this.props.getNeighborhoods()
+  async componentDidMount() {
+    await this.props.getWards()
+    return this.props.getNeighborhoods()
   }
 
   handleSwitch = () => {
@@ -20,7 +21,7 @@ class MapContainer extends Component {
 
   render() {
     const { map, wards, neighborhoods } = this.props
-    const isWards = map === 'wards'
+    const isWards = (map === 'wards')
     return (
       <div>
         <button
