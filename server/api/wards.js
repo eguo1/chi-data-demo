@@ -1,5 +1,6 @@
 'use strict'
 
+const ordinal = require('ordinal')
 const router = require('express').Router()
 const fetchAllWards = require('../services/ward-data')
 const { Ward } = require('../db/models')
@@ -40,7 +41,7 @@ router.get('/:id', async (req, res, next) => {
   try {
     const foundWard = await Ward.findOne({
       where: {
-        id: req.params.id
+        name: ordinal(+req.params.id)
       }
     })
     const allPoints = await foundWard.aggregateList()
