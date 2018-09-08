@@ -77,6 +77,7 @@ const CrimeData = db.define('crime_data', {
 CrimeData.filter = function (geomStr) {
   return db.query(`
     SELECT
+    crime_data.id,
     crime_data."Date" as date,
     crime_data."Block" as block,
     crime_data."Primary Type" as type,

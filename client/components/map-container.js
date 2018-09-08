@@ -5,7 +5,8 @@ import { connect } from 'react-redux'
 import {
   getWardData,
   getNeighborhoodData,
-  switchDatasets
+  switchDatasets,
+  requestFetch
 } from '../store'
 import GeoMap from './map/geo-map'
 
@@ -45,8 +46,14 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  getWards: () => dispatch(getWardData()),
-  getNeighborhoods: () => dispatch(getNeighborhoodData()),
+  getWards: () => {
+    dispatch(requestFetch())
+    dispatch(getWardData())
+  },
+  getNeighborhoods: () => {
+    dispatch(requestFetch())
+    dispatch(getNeighborhoodData())
+  },
   toggleDisplay: () => dispatch(switchDatasets())
 })
 
