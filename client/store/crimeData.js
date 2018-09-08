@@ -2,7 +2,7 @@
 
 import axios from 'axios'
 
-const GET_DATA = 'GET_DATA'
+export const GET_DATA = 'GET_DATA'
 const CLEAR_DATA = 'CLEAR_DATA'
 
 const defaultData = []
@@ -12,7 +12,7 @@ export const clearData = () => ({ type: CLEAR_DATA })
 
 export const getCrimeData = geomStr => async dispatch => {
   try {
-    const { data } = await axios.get('/api/data', {
+    const { data } = await axios.get('/api/crime-data', {
       params: {
         geomStr
       }

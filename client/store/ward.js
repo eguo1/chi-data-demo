@@ -2,7 +2,7 @@
 
 import axios from 'axios'
 
-const GET_WARDS = 'GET_WARDS'
+export const GET_WARDS = 'GET_WARDS'
 
 const defaultWards = []
 

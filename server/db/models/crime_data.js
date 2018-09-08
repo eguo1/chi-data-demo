@@ -74,8 +74,8 @@ const CrimeData = db.define('crime_data', {
   }
 })
 
-CrimeData.filter = async function (geomStr) {
-  const [filteredDatapoints] = await db.query(`
+CrimeData.filter = function (geomStr) {
+  return db.query(`
     SELECT
     crime_data."Date" as date,
     crime_data."Block" as block,
@@ -86,7 +86,6 @@ CrimeData.filter = async function (geomStr) {
     WHERE ST_Contains(ST_Multi(ST_GeomFromText(:filterGeom)), crime_data."Location");`,
     { replacements: { filterGeom: geomStr }, type: Sequelize.QueryTypes.SELECT }
   )
-  return filteredDatapoints
 }
 
 module.exports.CrimeData = CrimeData

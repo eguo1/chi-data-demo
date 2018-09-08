@@ -8,17 +8,14 @@ import { getColor } from '../../util/getColor'
 import { getCrimeData, clearData } from '../../store'
 
 class GeoMap extends Component {
-  constructor() {
-    super()
-    this.state = {
-      lat: 41.8781,
-      lng: -87.6298,
-      zoom: 12,
-    }
+  state = {
+    lat: 41.8781,
+    lng: -87.6298,
+    zoom: 12
   }
 
   handleViewchange = evt => {
-    if(evt.target._zoom >= 16) {
+    if(evt.target._zoom >= 18) {
       const bounds = evt.target.getBounds()
       const geomStr = 'MULTIPOLYGON(((' +
         bounds._northEast.lng + ' ' + bounds._northEast.lat + ',' +
@@ -27,23 +24,25 @@ class GeoMap extends Component {
         bounds._southWest.lng + ' ' + bounds._northEast.lat + ',' +
         bounds._northEast.lng + ' ' + bounds._northEast.lat + ')))'
       console.log(geomStr)
+      this.props.getMarkers(geomStr)
+    } else if (this.props.crimeData[0]) {
+      this.props.clearMarkers()
     }
   }
 
   render() {
     const position = [this.state.lat, this.state.lng]
-    const { mapElements, adj } = this.props
+    const { mapRegions, adj } = this.props
     let max, min
-    if (mapElements[0]) {
-      max = mapElements[0].count
-      min = mapElements[mapElements.length - 1].count
+    if (mapRegions[0]) {
+      max = mapRegions[0].count
+      min = mapRegions[mapRegions.length - 1].count
     }
 
     return (
       <Map
         center={position}
         zoom={this.state.zoom}
-        onZoomend={this.handleViewchange}
         onMoveend={this.handleViewchange}
       >
         <TileLayer
@@ -52,7 +51,7 @@ class GeoMap extends Component {
           id='mapbox.streets'
           accessToken={process.env.MAPBOX_TOKEN}
         />
-        {mapElements.map(elem => {
+        {mapRegions.map(elem => {
           return (
             <GeoRegion
               key={elem.name}
@@ -68,9 +67,13 @@ class GeoMap extends Component {
   }
 }
 
+const mapStateToProps = state => ({
+  crimeData: state.crimeData
+})
+
 const mapDispatchToProps = dispatch => ({
   getMarkers: (geomStr) => dispatch(getCrimeData(geomStr)),
   clearMarkers: () => dispatch(clearData())
 })
 
-export default connect(null, mapDispatchToProps)(GeoMap)
+export default connect(mapStateToProps, mapDispatchToProps)(GeoMap)

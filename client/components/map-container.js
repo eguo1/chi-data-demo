@@ -30,7 +30,7 @@ class MapContainer extends Component {
           Switch
         </button>
         <GeoMap
-          mapElements={isWards ? wards : neighborhoods}
+          mapRegions={isWards ? wards : neighborhoods}
           adj={isWards ? 1 : 0.75}
         />
       </div>
