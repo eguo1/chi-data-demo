@@ -28,8 +28,8 @@ Neighborhood.aggregateCount = async function () {
     neighborhoods.name
     FROM neighborhoods, crime_data
     WHERE ST_Contains(neighborhoods.geom, crime_data."Location")
-    GROUP BY neighborhoods.name;`
-  )
+    GROUP BY neighborhoods.name;
+  `)
   let updatedNeighborhoods = []
   if (allNeighborhoodCounts.length) {
     for (let i = 0; i < allNeighborhoodCounts.length; i++) {

@@ -17,7 +17,14 @@ export default class GeoMap extends Component {
 
   handleViewchange = evt => {
     if(evt.target._zoom >= 16) {
-      console.log(evt.target.getBounds())
+      const bounds = evt.target.getBounds()
+      const geomStr = 'MULTIPOLYGON(((' +
+        bounds._northEast.lng + ' ' + bounds._northEast.lat + ',' +
+        bounds._northEast.lng + ' ' + bounds._southWest.lat + ',' +
+        bounds._southWest.lng + ' ' + bounds._southWest.lat + ',' +
+        bounds._southWest.lng + ' ' + bounds._northEast.lat + ',' +
+        bounds._northEast.lng + ' ' + bounds._northEast.lat + ')))'
+      console.log(geomStr)
     }
   }
 
