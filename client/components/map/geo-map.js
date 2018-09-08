@@ -15,9 +15,11 @@ export default class GeoMap extends Component {
     }
   }
 
-  // handleMoveend = evt => {
-  //   console.log(evt.target.getBounds())
-  // }
+  handleViewchange = evt => {
+    if(evt.target._zoom >= 16) {
+      console.log(evt.target.getBounds())
+    }
+  }
 
   render() {
     const position = [this.state.lat, this.state.lng]
@@ -32,7 +34,8 @@ export default class GeoMap extends Component {
       <Map
         center={position}
         zoom={this.state.zoom}
-        onMoveend={this.handleMoveend}
+        onZoomend={this.handleViewchange}
+        onMoveend={this.handleViewchange}
       >
         <TileLayer
           attribution="&amp;copy <a href=&quot;https://www.itsericguo.com&quot;>Eric Guo</a>"
