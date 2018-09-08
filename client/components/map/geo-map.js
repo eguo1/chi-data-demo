@@ -2,10 +2,12 @@
 
 import React, { Component } from 'react'
 import { Map, TileLayer } from 'react-leaflet'
+import { connect } from 'react-redux'
 import GeoRegion from './geo-region'
 import { getColor } from '../../util/getColor'
+import { getCrimeData, clearData } from '../../store'
 
-export default class GeoMap extends Component {
+class GeoMap extends Component {
   constructor() {
     super()
     this.state = {
@@ -65,3 +67,10 @@ export default class GeoMap extends Component {
     )
   }
 }
+
+const mapDispatchToProps = dispatch => ({
+  getMarkers: (geomStr) => dispatch(getCrimeData(geomStr)),
+  clearMarkers: () => dispatch(clearData())
+})
+
+export default connect(null, mapDispatchToProps)(GeoMap)
