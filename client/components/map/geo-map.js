@@ -15,6 +15,10 @@ export default class GeoMap extends Component {
     }
   }
 
+  // handleMoveend = evt => {
+  //   console.log(evt.target.getBounds())
+  // }
+
   render() {
     const position = [this.state.lat, this.state.lng]
     const { mapElements, adj } = this.props
@@ -25,7 +29,11 @@ export default class GeoMap extends Component {
     }
 
     return (
-      <Map center={position} zoom={this.state.zoom}>
+      <Map
+        center={position}
+        zoom={this.state.zoom}
+        onMoveend={this.handleMoveend}
+      >
         <TileLayer
           attribution="&amp;copy <a href=&quot;https://www.itsericguo.com&quot;>Eric Guo</a>"
           url='https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}'
