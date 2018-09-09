@@ -2,7 +2,7 @@
 
 import axios from 'axios'
 
-const GET_NEIGHBORHOODS = 'GET_NEIGHBORHOODS'
+export const GET_NEIGHBORHOODS = 'GET_NEIGHBORHOODS'
 
 const defaultNeighborhoods = []
 

@@ -74,4 +74,19 @@ const CrimeData = db.define('crime_data', {
   }
 })
 
+CrimeData.filter = function (geomStr) {
+  return db.query(`
+    SELECT
+    crime_data.id,
+    crime_data."Date" as date,
+    crime_data."Block" as block,
+    crime_data."Primary Type" as type,
+    crime_data."Arrest" as arrest,
+    crime_data."Location" as location
+    FROM crime_data
+    WHERE ST_Contains(ST_Multi(ST_GeomFromText(:filterGeom)), crime_data."Location");`,
+    { replacements: { filterGeom: geomStr }, type: Sequelize.QueryTypes.SELECT }
+  )
+}
+
 module.exports.CrimeData = CrimeData
