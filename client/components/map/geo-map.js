@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react'
 import { Map, TileLayer } from 'react-leaflet'
+import MarkerClusterGroup from 'react-leaflet-markercluster'
 import { connect } from 'react-redux'
 import GeoRegion from './geo-region'
 import CrimeMarker from './crime-marker'
@@ -13,12 +14,13 @@ class GeoMap extends Component {
     lat: 41.8781,
     lng: -87.6298,
     zoom: 12,
-    showRegions: true
+    showRegions: true,
+    showMarkers: false
   }
 
   handleViewchange = evt => {
     if(evt.target._zoom >= 18) {
-      this.setState({ showRegions: false })
+      this.setState({ showRegions: false, showMarkers: true })
       if (!this.props.isFetching) {
         const bounds = evt.target.getBounds()
         const geomStr = 'MULTIPOLYGON(((' +
@@ -29,9 +31,11 @@ class GeoMap extends Component {
           bounds._northEast.lng + ' ' + bounds._northEast.lat + ')))'
         this.props.getMarkers(geomStr)
       }
-    } else if (this.props.crimeData[0]) {
-      this.props.clearMarkers()
-      this.setState({ showRegions: true })
+    } else {
+      this.setState({ showRegions: true, showMarkers: false })
+      if (this.props.crimeData[0]) {
+       this.props.clearMarkers()
+      }
     }
   }
 
@@ -49,6 +53,7 @@ class GeoMap extends Component {
         center={position}
         zoom={this.state.zoom}
         onMoveend={this.handleViewchange}
+        maxZoom='24'
       >
         <TileLayer
           attribution="&amp;copy <a href=&quot;https://www.itsericguo.com&quot;>Eric Guo</a>"
@@ -56,18 +61,26 @@ class GeoMap extends Component {
           id='mapbox.streets'
           accessToken={process.env.MAPBOX_TOKEN}
         />
-        {crimeData.map(crime => {
-          return (
-            <CrimeMarker
-              key={crime.id}
-              location={crime.location}
-              type={crime.type}
-              date={crime.date}
-              arrest={crime.arrest}
-              block={crime.block}
-            />
-          )
-        })}
+        {this.state.showMarkers ?
+          <MarkerClusterGroup
+            showCoverageOnHover={false}
+            maxClusterRadius='100'
+          >
+            {crimeData.map(crime => {
+              return (
+                <CrimeMarker
+                  key={crime.id}
+                  location={crime.location}
+                  type={crime.type}
+                  date={crime.date}
+                  arrest={crime.arrest}
+                  block={crime.block}
+                />
+              )
+            })}
+          </MarkerClusterGroup>
+          : null
+        }
         {this.state.showRegions ?
           mapRegions.map(elem => {
             return (
